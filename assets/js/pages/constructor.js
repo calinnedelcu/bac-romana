@@ -35,6 +35,7 @@
     }
   };
   S.TIPURI = TIPURI;
+  const DESC = { narativ: 'basm cult, nuvelă, roman', poetic: 'încadrare, imagini poetice, prozodie', dramatic: 'comedie, text dramatic postbelic', personaj: 'statut, o trăsătură, două elemente', relatie: 'două personaje, scene, evoluție' };
 
   const st = () => S.store.get('cons', { tip: 'narativ', op: null, pick: {} });
   const save = (s) => S.store.set('cons', s);
@@ -82,7 +83,7 @@
         picker(k + ':sv', sv, (v) => v.titlu.replace(/\*/g, '').slice(0, 44) + (v.titlu.length > 44 ? '…' : ''), 2, s)),
       par('Reperul 3 · Două elemente de construcție', '6 p',
         E.map((e) => `<p>${f(e.analiza)}${e.relevanta ? ' ' + f(e.relevanta) : ''} ${pt(e.relevanta ? '+3' : '+2')}</p>`).join('') +
-        (E.some((e) => !e.relevanta) ? `<p class="small muted" style="font-family:var(--font)">Adaugă o frază despre relevanța pentru temă, altfel elementul ia 2 p în loc de 3.</p>` : ''),
+        (E.some((e) => !e.relevanta) ? `<p class="small muted" style="font-family:var(--f-body)">Adaugă o frază despre relevanța pentru temă, altfel elementul ia 2 p în loc de 3.</p>` : ''),
         picker(k + ':el', el, (e) => e.nume.replace(/\*/g, ''), 2, s)),
       par('Încheiere', '', `<p>${f(o.incheiere)}</p>`)
     ].join('');
@@ -105,7 +106,7 @@
     return [
       par('Introducere', '', `<p>${f(o.introducere)}</p>${p.tip ? `<p>${f(p.nume)} este ${f(p.tip.replace(/^personaj/, 'un personaj'))}.</p>` : ''}`, pp),
       par('Reperul 1 · Statutul personajului', '6 p', ['social', 'psihologic', 'moral'].filter((x) => stt[x]).map((x) => `<p>${f(stt[x])}</p>`).join('') +
-        `<p class="small muted" style="font-family:var(--font)">Statutul se punctează global: 6 p dacă e prezentat adecvat și nuanțat, 3 p dacă e ezitant. Atinge toate trei laturile.</p>`),
+        `<p class="small muted" style="font-family:var(--f-body)">Statutul se punctează global: 6 p dacă e prezentat adecvat și nuanțat, 3 p dacă e ezitant. Atinge toate trei laturile.</p>`),
       par('Reperul 2 · O trăsătură, prin două episoade', '6 p',
         `<p>O trăsătură definitorie a personajului este ${f(t.trasatura)}. ${pt('+2')}</p>` + (t.episoade || []).slice(0, 2).map((e) => `<p>${f(e.comentariu)} ${pt('+2')}</p>`).join(''), tp),
       par('Reperul 3 · Două elemente de construcție a personajului', '6 p',
@@ -132,7 +133,7 @@
         pers.filter((p) => p.statut).map((p) => `<p>${f(p.statut.social || '')} ${f(p.statut.psihologic || '')} ${f(p.statut.moral || '')} ${pt('+3')}</p>`).join('') +
         (() => {
           const lipsa = r.intre.filter((n) => !pers.some((p) => p.statut && (p.nume.indexOf(n) === 0 || n.indexOf(p.nume) === 0)));
-          return lipsa.length ? `<p class="small muted" style="font-family:var(--font)">Baremul dă câte 3 p pentru statutul fiecărui personaj. Pentru ${lipsa.map(S.esc).join(' și ')}, adaugă cu cuvintele tale o frază despre statutul social, una despre cel psihologic și una despre cel moral; pornește de la paragraful de mai sus și de la scenele din fișă.</p>` : '';
+          return lipsa.length ? `<p class="small muted" style="font-family:var(--f-body)">Baremul dă câte 3 p pentru statutul fiecărui personaj. Pentru ${lipsa.map(S.esc).join(' și ')}, adaugă cu cuvintele tale o frază despre statutul social, una despre cel psihologic și una despre cel moral; pornește de la paragraful de mai sus și de la scenele din fișă.</p>` : '';
         })()),
       par('Reperul 2 · Relația, prin două episoade', '6 p', `<p>${f(r.statut_initial)} ${pt('+2')}</p>` + SC.map((e) => `<p>${f(e.comentariu)} ${pt('+2')}</p>`).join(''),
         picker(kk + ':sc', r.scene || [], (e) => e.titlu.replace(/\*/g, ''), 2, s)),
@@ -159,23 +160,18 @@
     if (o) plan = s.tip === 'personaj' ? planPersonaj(o, s) : s.tip === 'relatie' ? planRelatie(o, s) : planNarPoetDram(o, s.tip, s);
     save(s);
     return `
-      <div class="page-head">
-        <div class="kicker">Pentru eseu · <span class="chip c4">Subiectul al III-lea</span></div>
-        <h1>Constructorul de eseu</h1>
-        <p class="lead">Alege tipul de cerință și opera. Primești eseul așezat pe repere, din fraze din fișă, cu punctele din barem lângă fiecare bucată. Alege ce trăsături, secvențe și elemente folosești.</p>
-      </div>
-      <div class="card">
-        <label class="fld">Tipul de cerință</label>
-        <div class="seg-ctl" id="c-tip" style="margin-bottom:14px">${Object.entries(TIPURI).map(([k, t]) => `<button data-tip="${k}" aria-pressed="${k === s.tip}">${t.label}</button>`).join('')}</div>
-        <label class="fld" for="c-op">Opera</label>
-        <select id="c-op">${el.map((x) => `<option value="${x.id}"${x.id === s.op ? ' selected' : ''}>${S.esc(x.titlu)} — ${S.esc(x.autor)}</option>`).join('')}</select>
-      </div>
+      ${S.hero({ mark: S.icon('pen'), pts: '', kicker: "Pentru eseu · Subiectul al III-lea", title: "Constructorul de eseu", lead: "Alege tipul de cerință și opera. Primești eseul așezat pe repere, din fraze din fișă, cu punctele din barem lângă fiecare bucată. Alege ce trăsături, secvențe și elemente folosești." })}
+      <h2 id="alege" style="margin-top:28px">1. Alege cerința</h2>
+      <div class="typecards" id="c-tip">${Object.entries(TIPURI).map(([k, t]) => `<button class="typecard" data-tip="${k}" aria-pressed="${k === s.tip}"><b>${t.label}</b><span>${DESC[k]}</span></button>`).join('')}</div>
 
-      <h2 style="margin-top:28px">Cerința</h2>
-      <div><div class="card tight serif">${S.esc(T.cerinta(o))}<br><span class="small muted" style="font-family:var(--font)">În elaborarea eseului, vei avea în vedere următoarele repere:</span><ul class="small" style="margin:6px 0 0">${T.repere.map((r) => `<li>${S.esc(r)}</li>`).join('')}</ul></div></div>
+      <h2 id="opera">2. Alege opera</h2>
+      <div class="opchips" id="c-ops">${el.map((x) => `<button data-op="${x.id}" aria-pressed="${x.id === s.op}">${S.esc(x.titlu)}</button>`).join('')}</div>
+
+      <h2 id="cerinta">Cerința</h2>
+      <div class="item"><p class="serif" style="font-size:1.04rem">${S.esc(T.cerinta(o))}</p><span class="lbl">În elaborarea eseului, vei avea în vedere următoarele repere:</span><ul class="small" style="margin:6px 0 0">${T.repere.map((r) => `<li>${S.esc(r)}</li>`).join('')}</ul></div>
       ${T.note ? S.callout('info', `<p>${S.esc(T.note)}</p>`) : ''}
 
-      <h2>Eseul, pe repere</h2>
+      <h2 id="eseul">3. Eseul, pe repere</h2>
       ${o ? `<div id="plan">${plan}</div>
       <div class="card tight">
         <div class="wc"><span><b id="c-wc">0</b> cuvinte în plan</span><span id="c-wc-msg"></span><button class="btn sm" data-copy="plan-text">Copiază textul</button></div>
@@ -196,7 +192,7 @@
 
   S.page({
     id: 'constructor', title: 'Constructorul de eseu',
-    nav: { label: 'Constructorul de eseu', color: C, badge: '✎' },
+    nav: { label: 'Constructorul de eseu', color: C, badge: 'E' },
     render,
     mount(root) {
       const s = st();
@@ -205,8 +201,8 @@
         const b = e.target.closest('[data-tip]'); if (!b) return;
         s.tip = b.dataset.tip; save(s); S.rerender();
       });
-      const sel = root.querySelector('#c-op');
-      sel && sel.addEventListener('change', () => { s.op = sel.value; save(s); location.hash = '#/constructor/' + sel.value + ':' + s.tip; });
+      const ops = root.querySelector('#c-ops');
+      ops && ops.addEventListener('click', (e) => { const b = e.target.closest('[data-op]'); if (!b) return; s.op = b.dataset.op; save(s); location.hash = '#/constructor/' + b.dataset.op + ':' + s.tip; });
       const plan = root.querySelector('#plan');
       if (plan) {
         plan.addEventListener('click', (e) => {

@@ -80,18 +80,14 @@
     const M = MODES[mode];
     const draft = S.store.get('ex:txt:' + mode, '');
     return `
-      <div class="page-head">
-        <div class="kicker">Antrenament</div>
-        <h1>Exersează cu cronometru</h1>
-        <p class="lead">Scrie răspunsul ca la examen. Site-ul numără cuvintele, cronometrează și caută pe text mărcile pe care le punctează baremul. Textul rămâne salvat în browser.</p>
-      </div>
+      ${S.hero({ mark: S.icon('timer'), pts: '', kicker: "Antrenament", title: "Exersează cu cronometru", lead: "Scrie răspunsul ca la examen. Site-ul numără cuvintele, cronometrează și caută pe text mărcile pe care le punctează baremul. Textul rămâne salvat în browser." })}
       <div class="seg-ctl" id="ex-mode">${Object.entries(MODES).map(([k, m]) => `<button data-m="${k}" aria-pressed="${k === mode}">${m.label}</button>`).join('')}</div>
-      <div class="card tight" style="margin-top:14px"><div class="small muted" style="font-weight:600">Cerință de exersare</div><div class="serif">${S.esc(M.prompt)}</div>
-        ${M.text && M.text() ? `<div class="serif small" style="white-space:pre-line;margin-top:10px;padding:10px 12px;border-radius:9px;background:var(--surface-2);border:1px solid var(--line)">${S.fmt(M.text())}</div>` : ''}
+      <div class="item" style="margin-top:16px"><span class="lbl" style="margin-top:0">Cerință de exersare</span><p class="serif" style="font-size:1.04rem;margin:6px 0 0">${S.esc(M.prompt)}</p>
+        ${M.text && M.text() ? `<div class="serif" style="white-space:pre-line;margin-top:12px;padding:12px 16px;border-radius:12px;background:var(--sheet-2);color:var(--pen);line-height:1.65">${S.fmt(M.text())}</div>` : ''}
         ${M.note ? `<p class="small muted" style="margin:8px 0 0">${S.esc(M.note)}</p>` : ''}</div>
       <div class="editor-grid">
         <div>
-          <textarea id="ex-txt" placeholder="Scrie aici. Lasă un rând liber între paragrafe." spellcheck="true" lang="ro">${S.esc(draft)}</textarea>
+          <textarea class="paper-ta" id="ex-txt" placeholder="Scrie aici. Lasă un rând liber între paragrafe." spellcheck="true" lang="ro">${S.esc(draft)}</textarea>
           <div class="wc"><span><b id="ex-wc">0</b> cuvinte</span><span>ținta: ${M.target[0]}–${M.target[1]}</span></div>
           <div class="meter"><i id="ex-meter" style="background:${M.color}"></i></div>
           <div class="btn-row"><button class="btn sm" id="ex-clear">Golește</button><button class="btn sm" data-copy="ex-txt-copy">Copiază</button></div>
@@ -101,7 +97,7 @@
           <div class="card tight">
             <div style="display:flex;align-items:center;justify-content:space-between;gap:8px">
               <span class="timer" id="ex-time">${String(M.minutes).padStart(2, '0')}:00</span>
-              <span class="btn-row" style="margin:0"><button class="btn sm primary" id="ex-start">Pornește</button><button class="btn sm" id="ex-reset">↺</button></span>
+              <span class="btn-row" style="margin:0"><button class="btn sm primary" id="ex-start">Pornește</button><button class="btn sm" id="ex-reset" aria-label="Repornește cronometrul">↺</button></span>
             </div>
             <p class="small muted" style="margin:6px 0 0">${M.minutes} de minute, cât ai propus pe pagina de start.</p>
           </div>
@@ -119,8 +115,8 @@
   let timer = null, left = 0, running = false;
 
   S.page({
-    id: 'exersare', title: 'Exersează cu cronometru',
-    nav: { label: 'Exersează cu cronometru', color: C, badge: '⏱' },
+    id: 'exersare', title: 'Exersează cu cronometru', wide: true,
+    nav: { label: 'Exersează cu cronometru', color: C, badge: 'Ex' },
     render,
     mount(root) {
       const mode = S.store.get('ex:mode', 'ib');
@@ -146,7 +142,7 @@
       root.querySelector('#ex-clear').addEventListener('click', () => { if (!ta.value || confirm('Ștergi textul?')) { ta.value = ''; upd(); } });
       const tEl = root.querySelector('#ex-time'), bStart = root.querySelector('#ex-start');
       left = M.minutes * 60; running = false; clearInterval(timer);
-      const show = () => { const m = Math.floor(Math.abs(left) / 60), s = Math.abs(left) % 60; tEl.textContent = (left < 0 ? '−' : '') + String(m).padStart(2, '0') + ':' + String(s).padStart(2, '0'); tEl.style.color = left < 0 ? 'var(--bad)' : left < 300 ? 'var(--warn)' : ''; };
+      const show = () => { const m = Math.floor(Math.abs(left) / 60), s = Math.abs(left) % 60; tEl.textContent = (left < 0 ? '−' : '') + String(m).padStart(2, '0') + ':' + String(s).padStart(2, '0'); tEl.style.color = left < 0 ? 'var(--red)' : left < 300 ? 'var(--warn)' : ''; };
       bStart.addEventListener('click', () => {
         running = !running; bStart.textContent = running ? 'Pauză' : 'Pornește';
         clearInterval(timer);

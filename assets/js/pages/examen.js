@@ -4,14 +4,10 @@
 
   S.page({
     id: 'examen', title: 'Ziua examenului',
-    nav: { label: 'Ziua examenului', color: 'var(--c1)', badge: '✓' },
+    nav: { label: 'Ziua examenului', color: 'var(--pen)', badge: '14' },
     render() {
       return `
-      <div class="page-head">
-        <div class="kicker">Luni, 14 iunie 2027</div>
-        <h1>Ziua examenului</h1>
-        <p class="lead">Regulile din sală care îți pot costa lucrarea, o ordine de lucru care păstrează timp pentru eseu și ce faci când un text nu-ți spune nimic.</p>
-      </div>
+      ${S.hero({ mark: '3 h', pts: '', kicker: "Luni, 14 iunie 2027", title: "Ziua examenului", facts: [["albastru", "singura culoare de pix"], ["ciorna", "nu se corectează"], ["o linie", "peste ce tai"]], lead: "Regulile din sală care îți pot costa lucrarea, o ordine de lucru care păstrează timp pentru eseu și ce faci când un text nu-ți spune nimic." })}
 
       <h2>Regulile din sală</h2>
       <ul class="steps">

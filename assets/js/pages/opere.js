@@ -3,12 +3,13 @@
   const S = window.Site;
   const C = 'var(--c4)';
   const GEN = { epic: 'Proză', liric: 'Poezie', dramatic: 'Teatru' };
+  const GENC = { epic: 'var(--c4)', liric: 'var(--c2)', dramatic: 'var(--c5)' };
   const ORDER = ['povestea-lui-harap-alb', 'moara-cu-noroc', 'ion', 'baltagul', 'ultima-noapte', 'enigma-otiliei', 'morometii',
     'o-scrisoare-pierduta', 'iona', 'luceafarul', 'floare-albastra', 'plumb', 'testament', 'eu-nu-strivesc-corola', 'riga-crypto', 'leoaica-tanara-iubirea'];
 
   S.opere = function () {
     const all = (window.OPERE || []).slice();
-    const rank = (o) => { const i = ORDER.findIndex((k) => o.id === k || o.id.startsWith(k)); return i < 0 ? 99 : i; };
+    const rank = (o) => { const i = ORDER.findIndex((k) => o.id === k || o.id.startsWith(k + '-')); return i < 0 ? 99 : i; };
     return all.sort((a, b) => rank(a) - rank(b));
   };
   S.opera = (id) => (window.OPERE || []).find((o) => o.id === id);
@@ -23,21 +24,19 @@
     const filt = S.store.get('opfilt', 'toate');
     const nKnown = ops.filter((o) => known[o.id]).length;
     return `
-      <div class="page-head">
-        <div class="kicker">Pentru eseu · <span class="chip c4">Subiectul al III-lea</span></div>
-        <h1>Fișe de operă</h1>
-        <p class="lead">Câte o fișă pentru fiecare autor canonic din programă, scrisă direct pe reperele eseului: încadrarea cu trăsături și dovezi, tema cu secvențe comentate, elementele de construcție cu relevanța lor, personajele și citatele.</p>
-      </div>
+      ${S.hero({ mark: S.icon('book'), pts: '', kicker: "Pentru eseu · Subiectul al III-lea", title: "Fișe de operă", lead: "Câte o fișă pentru fiecare autor canonic din programă, scrisă direct pe reperele eseului: încadrarea cu trăsături și dovezi, tema cu secvențe comentate, elementele de construcție cu relevanța lor, personajele și citatele." })}
       <div class="filters">
         <span class="seg-ctl" id="op-filt">${['toate', 'epic', 'liric', 'dramatic'].map((g) => `<button data-f="${g}" aria-pressed="${filt === g}">${g === 'toate' ? 'Toate' : GEN[g]}</button>`).join('')}</span>
-        <span class="chip ok" style="margin-left:auto">${nKnown} / ${ops.length} știute</span>
+        <input type="search" id="op-q" placeholder="Caută titlu, autor, personaj…" aria-label="Caută în fișe">
+        <span class="progress-line" style="margin-left:auto"><span><b style="color:var(--ink)">${nKnown}</b> / ${ops.length} știute</span><span class="meter" style="width:120px"><i style="width:${ops.length ? (nKnown / ops.length) * 100 : 0}%;background:var(--ok)"></i></span></span>
       </div>
       <div class="op-grid" id="op-grid">
-        ${ops.map((o) => `<a class="op-card" href="#/opera/${o.id}" data-gen="${o.gen}"${filt !== 'toate' && o.gen !== filt ? ' hidden' : ''}>
+        ${ops.map((o) => `<a class="op-card" href="#/opera/${o.id}" data-gen="${o.gen}" data-k="${S.esc([o.titlu, o.autor, o.specie, ...(o.personaje || []).map((p) => p.nume)].join(' ').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase())}"${filt !== 'toate' && o.gen !== filt ? ' hidden' : ''}>
           ${known[o.id] ? '<span class="done" title="Știu fișa">✓</span>' : ''}
+          <span class="g">${GEN[o.gen]}</span>
           <span class="t">${S.esc(o.titlu)}</span>
           <span class="a">${S.esc(o.autor)}${o.an ? ` · ${S.esc(o.an)}` : ''}</span>
-          <span class="m"><span class="chip c4">${S.esc(o.specie)}</span></span>
+          <span class="m"><span class="chip">${S.esc(o.specie.split(/[,(]/)[0].trim())}</span></span>
         </a>`).join('')}
       </div>
       ${ops.length ? '' : S.callout('info', '<p>Fișele se încarcă din fișierele de date. Dacă vezi mesajul acesta, lipsește un fișier din <code>assets/js/data</code>.</p>')}
@@ -70,23 +69,23 @@
     const poem = o.gen === 'liric';
     const inc = o.incadrare || {};
     return `
-      <h3 style="margin-top:6px">Reperul 1 · Încadrarea <span class="chip c4">6 p</span></h3>
-      <div class="card tight"><span class="lbl muted small" style="font-weight:700">Ce precizezi (2 p)</span><p class="serif" style="margin:4px 0 0">${f(inc.eticheta)}</p></div>
+      <div class="reper-h" style="margin-top:8px"><h3>Reperul 1 · Încadrarea</h3><span class="hand">6 p</span></div>
+      <div class="item" style="background:var(--accent-soft);border-color:transparent"><span class="lbl" style="margin-top:0">Ce precizezi · 2 p</span><p class="serif" style="margin:4px 0 0">${f(inc.eticheta)}</p></div>
       <p class="small muted">Alegi două trăsături: numirea fiecăreia aduce 1 p, dovada din text încă 1 p.</p>
       ${trasaturi(inc.trasaturi)}
 
-      <h3 style="margin-top:28px">Reperul 2 · Tema și ${poem ? 'două imagini / idei poetice' : 'două episoade / secvențe'} <span class="chip c4">6 p</span></h3>
-      <div class="card tight"><span class="lbl muted small" style="font-weight:700">Tema (2 p)</span><p class="serif" style="margin:4px 0 0">${f(o.tema)}</p>${o.viziune ? `<p class="serif small" style="margin:8px 0 0">${f(o.viziune)}</p>` : ''}</div>
+      <div class="reper-h"><h3>Reperul 2 · Tema și ${poem ? 'două imagini / idei poetice' : 'două episoade / secvențe'}</h3><span class="hand">6 p</span></div>
+      <div class="item" style="background:var(--accent-soft);border-color:transparent"><span class="lbl" style="margin-top:0">Tema · 2 p</span><p class="serif" style="margin:4px 0 0">${f(o.tema)}</p>${o.viziune ? `<span class="lbl">Viziunea</span><p class="serif" style="margin:4px 0 0">${f(o.viziune)}</p>` : ''}</div>
       <p class="small muted">Alegi două. Fiecare aduce 2 p doar dacă e <strong>comentată</strong>; rezumatul sau simpla numire aduc 1 p.</p>
       ${secvente(o.secvente)}
 
-      <h3 style="margin-top:28px">Reperul 3 · Două elemente de ${poem ? 'compoziție și limbaj' : 'structură, compoziție sau limbaj'} <span class="chip c4">6 p</span></h3>
+      <div class="reper-h"><h3>Reperul 3 · Două elemente de ${poem ? 'compoziție și limbaj' : 'structură, compoziție sau limbaj'}</h3><span class="hand">6 p</span></div>
       <p class="small muted">Fiecare element: 3 p cu justificarea relevanței, 2 p fără ea, 1 p dacă e schematic.</p>
       ${o.structura ? `<div class="item"><h4>Structura</h4>${rv(`<p class="serif">${f(o.structura)}</p>`)}</div>` : ''}
       ${o.prozodie ? `<div class="item"><h4>Prozodia</h4>${rv(`<p class="serif">${f(o.prozodie)}</p>`)}</div>` : ''}
       ${elemente(o.elemente)}
 
-      <h3 style="margin-top:28px">Introducere și încheiere</h3>
+      <div class="reper-h"><h3>Introducere și încheiere</h3></div>
       ${o.introducere ? `<div class="item"><h4>Introducere</h4>${rv(`<p class="serif">${f(o.introducere)}</p>`)}</div>` : ''}
       ${o.incheiere ? `<div class="item"><h4>Încheiere</h4>${rv(`<p class="serif">${f(o.incheiere)}</p>`)}</div>` : ''}
     `;
@@ -134,17 +133,14 @@
     if (o.citate && o.citate.length) tabs.push({ label: 'Citate', html: quotesTab(o) });
     if (o.capcane && o.capcane.length) tabs.push({ label: 'Capcane', html: S.callout('trap', `<ul style="margin:0">${o.capcane.map((c) => `<li>${f(c)}</li>`).join('')}</ul>`) });
     return `
-      <p class="small"><a href="#/opere">← Toate fișele</a></p>
-      <div class="page-head">
-        <div class="kicker">${GEN[o.gen]} · <span class="chip c4">${S.esc(o.specie)}</span></div>
-        <h1>${S.esc(o.titlu)}</h1>
-        <p class="lead" style="margin-top:6px">${S.esc(o.autor)}${o.aparitie ? ` · ${f(o.aparitie)}` : o.an ? ` · ${S.esc(o.an)}` : ''}</p>
-        ${o.categorii ? `<div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:10px"><span class="small muted">Se potrivește la cerințe despre:</span>${o.categorii.map((c) => `<span class="chip">${S.esc(c)}</span>`).join('')}</div>` : ''}
-      </div>
+      <a class="back" href="#/opere">${S.icon('back')} Toate fișele</a>
+      ${S.hero({ mark: `<span style="color:${GENC[o.gen]}">${o.an || '·'}</span>`, pts: '', kicker: `${GEN[o.gen]} · ${S.esc(o.specie)}`, title: S.esc(o.titlu),
+        lead: `${S.esc(o.autor)}${o.aparitie ? ` · ${f(o.aparitie)}` : ''}`,
+        facts: (o.categorii || []).slice(0, 6) })}
       <div class="btn-row">
-        <button class="btn" id="tg-recall" aria-pressed="${recall}">${recall ? '◉ Mod repetiție: pornit' : '○ Mod repetiție'}</button>
-        <button class="btn" id="tg-known">${known[o.id] ? '✓ Știu fișa' : 'Marchează „Știu fișa”'}</button>
-        <a class="btn primary" href="#/constructor/${o.id}">Construiește eseul →</a>
+        <button class="btn" id="tg-recall" aria-pressed="${recall}">${S.icon('eye')}<span>Mod repetiție</span></button>
+        <button class="btn" id="tg-known" aria-pressed="${!!known[o.id]}">${S.icon('check')}<span>${known[o.id] ? 'Știu fișa' : 'Marchează „Știu fișa”'}</span></button>
+        <a class="btn primary" href="#/constructor/${o.id}">Construiește eseul ${S.icon('arrow')}</a>
       </div>
       <div id="fisa" class="${recall ? 'recall' : ''}">${S.tabs(tabs)}</div>
     `;
@@ -152,17 +148,24 @@
 
   S.page({
     id: 'opere', title: 'Fișe de operă',
-    nav: { label: 'Fișe de operă', color: C, badge: '📖' },
+    nav: { label: 'Fișe de operă', color: C, badge: 'F' },
     render: listPage,
     mount(root) {
       const seg = root.querySelector('#op-filt');
       if (!seg) return;
+      const q = root.querySelector('#op-q');
+      const apply = () => {
+        const g = S.store.get('opfilt', 'toate');
+        const words = q.value.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().split(/\s+/).filter(Boolean);
+        root.querySelectorAll('#op-grid .op-card').forEach((c) => { c.hidden = (g !== 'toate' && c.dataset.gen !== g) || !words.every((w) => c.dataset.k.includes(w)); });
+      };
       seg.addEventListener('click', (e) => {
         const b = e.target.closest('[data-f]'); if (!b) return;
         S.store.set('opfilt', b.dataset.f);
         seg.querySelectorAll('[data-f]').forEach((x) => x.setAttribute('aria-pressed', x === b));
-        root.querySelectorAll('#op-grid .op-card').forEach((c) => { c.hidden = b.dataset.f !== 'toate' && c.dataset.gen !== b.dataset.f; });
+        apply();
       });
+      q.addEventListener('input', apply);
     }
   });
 
@@ -177,11 +180,11 @@
         const on = !S.store.get('recall', false); S.store.set('recall', on);
         root.querySelector('#fisa').classList.toggle('recall', on);
         root.querySelectorAll('.rv.shown').forEach((x) => x.classList.remove('shown'));
-        b1.textContent = on ? '◉ Mod repetiție: pornit' : '○ Mod repetiție';
+        b1.setAttribute('aria-pressed', on);
       });
       b2.addEventListener('click', () => {
         const k = S.known(); k[id] = !k[id]; S.store.set('known', k);
-        b2.textContent = k[id] ? '✓ Știu fișa' : 'Marchează „Știu fișa”';
+        b2.setAttribute('aria-pressed', !!k[id]); b2.querySelector('span').textContent = k[id] ? 'Știu fișa' : 'Marchează „Știu fișa”';
         if (k[id]) S.toast('Bifat');
       });
     }

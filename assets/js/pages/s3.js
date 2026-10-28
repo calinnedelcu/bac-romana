@@ -114,12 +114,7 @@
     nav: { label: 'III · Eseul', color: C, badge: 'III', pts: '30 p' },
     render() {
       return `
-      <div class="page-head">
-        <div class="kicker">Subiectul al III-lea · <span class="chip c4">30 de puncte</span></div>
-        <h1>Eseul de 400 de cuvinte despre o operă studiată</h1>
-        <p class="lead">Cerința numește un autor (uneori doi, la alegere) sau o specie și îți dă trei repere. Fiecare reper valorează 6 puncte, iar redactarea încă 12. Eseul se învață pe structură: aceleași trei repere, cu materialul din fișa operei.</p>
-        <div class="toc"><a href="#/s3/barem">Baremul</a><a href="#/s3/structura">Structura</a><a href="#/s3/tipuri">Tipurile de cerință</a><a href="#/s3/reper3">Reperul 3: 3 p sau 2 p</a><a href="#/s3/curente">Curente</a><a href="#/s3/autori">Autorii canonici</a><a href="#/s3/critici">Maiorescu și Lovinescu</a></div>
-      </div>
+      ${S.hero({ mark: 'III', pts: '30 p', kicker: "Subiectul al III-lea", title: "Eseul de 400 de cuvinte despre o operă studiată", facts: [["3 × 6 p", "pe repere"], ["12 p", "redactare"], ["400", "de cuvinte, minimum"], ["17", "autori canonici"]], lead: "Cerința numește un autor (uneori doi, la alegere) sau o specie și îți dă trei repere. Fiecare reper valorează 6 puncte, iar redactarea încă 12. Eseul se învață pe structură: aceleași trei repere, cu materialul din fișa operei." })}
 
       <h2 id="barem">Cum se punctează</h2>
       <div class="grid g2">

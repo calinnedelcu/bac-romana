@@ -183,12 +183,7 @@
     nav: { label: 'II · Fragmentul literar', color: C, badge: 'II', pts: '10 p' },
     render() {
       return `
-      <div class="page-head">
-        <div class="kicker">Subiectul al II-lea · <span class="chip c3">10 puncte</span></div>
-        <h1>Analiza unui fragment literar pe care nu l-ai citit</h1>
-        <p class="lead">Primești un fragment de proză, poezie sau teatru și o singură cerință, de cel puțin 50 de cuvinte. Fragmentul poate fi de la orice autor studiat, așa că pregătirea sigură e cea a conceptelor, nu a textelor.</p>
-        <div class="toc"><a href="#/s2/reteta">Rețeta de 6 puncte</a><a href="#/s2/perspectiva">Perspectiva narativă</a><a href="#/s2/notatii">Notațiile autorului</a><a href="#/s2/ideea">Ideea poetică</a><a href="#/s2/personaj">Personajul</a><a href="#/s2/alte">Alte cerințe</a><a href="#/s2/figuri">Figuri de stil</a><a href="#/s2/test">Test rapid</a></div>
-      </div>
+      ${S.hero({ mark: 'II', pts: '10 p', kicker: "Subiectul al II-lea", title: "Analiza unui fragment literar pe care nu l-ai citit", facts: [["6 p", "conținut"], ["4 p", "redactare"], ["50", "de cuvinte, minimum"], ["4", "tipuri de cerință"]], lead: "Primești un fragment de proză, poezie sau teatru și o singură cerință, de cel puțin 50 de cuvinte. Fragmentul poate fi de la orice autor studiat, așa că pregătirea sigură e cea a conceptelor, nu a textelor." })}
 
       <h2>Cum se punctează</h2>
       ${S.pbar([{ t: 'identificarea / numirea a ceea ce cere cerința', p: 2, c: C, d: 'tipul de perspectivă, ideea poetică, trăsăturile' }, { t: 'comentariul nuanțat, cu exemple din fragment', p: 4, c: C, d: 'ezitant: 2 p · doar noțiuni generale: 1 p' }, ...red])}

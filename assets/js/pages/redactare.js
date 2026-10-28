@@ -63,11 +63,7 @@
     nav: { label: 'Redactare și ortografie', color: C, badge: 'Aa' },
     render() {
       return `
-      <div class="page-head">
-        <div class="kicker">Toate subiectele · <span class="chip c5">32 de puncte de formă</span></div>
-        <h1>Redactarea: punctele pe care le pierzi fără să știi</h1>
-        <p class="lead">Ortografia, punctuația, limba literară, numărul de cuvinte și așezarea în pagină se punctează la fiecare subiect. Programa cere respectarea normelor DOOM, iar evaluatorii numără greșelile.</p>
-      </div>
+      ${S.hero({ mark: 'Aa', pts: '32 p', kicker: "Toate subiectele", title: "Redactarea: punctele pe care le pierzi fără să știi", facts: [["10 p", "la I.A"], ["6 p", "la I.B"], ["4 p", "la II"], ["12 p", "la III"]], lead: "Ortografia, punctuația, limba literară, numărul de cuvinte și așezarea în pagină se punctează la fiecare subiect. Programa cere respectarea normelor DOOM, iar evaluatorii numără greșelile." })}
 
       <h2>Cât valorează forma la fiecare subiect</h2>
       <div class="tbl-wrap"><table>
@@ -85,7 +81,7 @@
       <h2>Virgula</h2>
       <div class="grid g2">
         <div class="card tight" style="border-top:3px solid var(--ok)"><h4>Pui virgulă</h4><ul class="small" style="margin:0">${VIRGULA_DA.map((x) => `<li>${x}</li>`).join('')}</ul></div>
-        <div class="card tight" style="border-top:3px solid var(--bad)"><h4>Nu pui virgulă</h4><ul class="small" style="margin:0">${VIRGULA_NU.map((x) => `<li>${x.replace(/~~(.+?)~~/g, '<s style="color:var(--bad);font-weight:700">$1</s>')}</li>`).join('')}</ul></div>
+        <div class="card tight" style="border-top:3px solid var(--red)"><h4>Nu pui virgulă</h4><ul class="small" style="margin:0">${VIRGULA_NU.map((x) => `<li>${x.replace(/~~(.+?)~~/g, '<s style="color:var(--red);font-weight:700">$1</s>')}</li>`).join('')}</ul></div>
       </div>
       ${S.callout('tip', '<p>Când nu ești sigur de o virgulă, rescrie fraza mai scurt. Două propoziții simple nu pot fi greșite la punctuație.</p>')}
 

@@ -170,12 +170,7 @@
     nav: { label: 'I.A · Înțelegerea textului', color: C, badge: 'I.A', pts: '30 p' },
     render() {
       return `
-      <div class="page-head">
-        <div class="kicker">Subiectul I · partea A · <span class="chip c1">30 de puncte</span></div>
-        <h1>Cinci întrebări despre un text pe care nu l-ai mai văzut</h1>
-        <p class="lead">Primești un text nonliterar: un fragment de jurnal, memorii, o scrisoare, un interviu sau un articol. Urmează cinci cerințe, fiecare de 6 puncte, la care răspunzi în enunțuri.</p>
-        <div class="toc">${['c1', 'c2', 'c3', 'c4', 'c5'].map((c, i) => `<a href="#/s1a/${c}">Cerința ${i + 1}</a>`).join('')}<a href="#/s1a/corectare">Corectează tu</a></div>
-      </div>
+      ${S.hero({ mark: 'I.A', pts: '30 p', kicker: "Subiectul I · partea A", title: "Cinci întrebări despre un text pe care nu l-ai mai văzut", facts: [["5", "cerințe × 6 p"], ["2 p", "din fiecare 6 se dau pe formă"], ["30–50", "de cuvinte la cerința 5"]], lead: "Primești un text nonliterar: un fragment de jurnal, memorii, o scrisoare, un interviu sau un articol. Urmează cinci cerințe, fiecare de 6 puncte, la care răspunzi în enunțuri." })}
 
       <h2>Regula de aur: fiecare răspuns e un enunț</h2>
       <p>Cerința spune explicit: <span class="q">„Scrie pe foaia de examen, în enunțuri, răspunsul la fiecare dintre următoarele cerințe.”</span> La cerințele 1–4, 2 din cele 6 puncte sunt pentru formă: unul pentru enunț și unul pentru exprimare, ortografie și punctuație.</p>

@@ -61,12 +61,7 @@
     nav: { label: 'I.B · Textul argumentativ', color: C, badge: 'I.B', pts: '20 p' },
     render() {
       return `
-      <div class="page-head">
-        <div class="kicker">Subiectul I · partea B · <span class="chip c2">20 de puncte</span></div>
-        <h1>Textul argumentativ de 150 de cuvinte</h1>
-        <p class="lead">Pornind de la același text de la I.A, primești o întrebare de tipul „dacă X sau nu”. Răspunzi cu o opinie, două argumente și o concluzie, folosind textul dat și un exemplu din experiența ta sau din cultură.</p>
-        <div class="toc"><a href="#/s1b/barem">Baremul</a><a href="#/s1b/structura">Structura</a><a href="#/s1b/model">Text model</a><a href="#/s1b/text">Textul dat: 3 p sau 1 p</a><a href="#/s1b/conectori">Conectori</a><a href="#/s1b/construieste">Construiește-ți textul</a></div>
-      </div>
+      ${S.hero({ mark: 'I.B', pts: '20 p', kicker: "Subiectul I · partea B", title: "Textul argumentativ de 150 de cuvinte", facts: [["14 p", "conținut"], ["6 p", "redactare"], ["150", "de cuvinte, minimum"]], lead: "Pornind de la același text de la I.A, primești o întrebare de tipul „dacă X sau nu”. Răspunzi cu o opinie, două argumente și o concluzie, folosind textul dat și un exemplu din experiența ta sau din cultură." })}
 
       <h2>Cum arată cerința</h2>
       <ul class="formulari"><li>Redactează un text de minimum 150 de cuvinte, în care să argumentezi dacă fotografiile au sau nu un rol important în viața unei persoane, raportându-te atât la informațiile din fragmentul extras din volumul <em>Pământul bătătorit de părintele meu. File de jurnal</em> de Puia Florica Rebreanu, cât și la experiența personală sau culturală.</li></ul>
