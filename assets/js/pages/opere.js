@@ -36,7 +36,7 @@
           <span class="g">${GEN[o.gen]}</span>
           <span class="t">${S.esc(o.titlu)}</span>
           <span class="a">${S.esc(o.autor)}${o.an ? ` · ${S.esc(o.an)}` : ''}</span>
-          <span class="m"><span class="chip">${S.esc(o.specie.split(/[,(]/)[0].trim())}</span></span>
+          <span class="m"><span class="chip">${S.esc(o.specie.split(/[,(]/)[0].trim())}</span>${window.ESEURI && window.ESEURI[o.id] ? ' <span class="chip ok">eseu complet</span>' : ''}</span>
         </a>`).join('')}
       </div>
       ${ops.length ? '' : S.callout('info', '<p>Fișele se încarcă din fișierele de date. Dacă vezi mesajul acesta, lipsește un fișier din <code>assets/js/data</code>.</p>')}
@@ -118,6 +118,22 @@
       <hr>`).join('');
   }
 
+  const RLBL = { R1: 'Reperul 1 · Încadrarea', R2: 'Reperul 2 · Tema și imaginile poetice', R3: 'Reperul 3 · Elemente de compoziție și limbaj' };
+  function eseuTab(e) {
+    const words = S.words(e.repere.flatMap((r) => r.p).join(' ').replace(/[{}*]/g, ''));
+    const mark = (t) => f(t).replace(/\{\{([^}]+)\}\}/g, '<mark class="corr" title="Corectat față de foaie">$1</mark>');
+    const corr = e.corecturi && e.corecturi.length ? S.acc(`Ce am corectat față de foaie <span class="chip">${e.corecturi.length}</span>`,
+      `<p class="small muted">Locurile corectate sunt marcate în text. Restul e textul de pe foaie, cu câteva retușuri de punctuație și de tipar.</p>
+      <div class="tbl-wrap"><table><tr><th>Pe foaie</th><th>Corect</th><th>De ce</th></tr>${e.corecturi.map(([a, b, c]) => `<tr><td class="serif">${f(a)}</td><td class="serif"><mark class="corr">${f(b)}</mark></td><td class="small">${f(c)}</td></tr>`).join('')}</table></div>
+      ${e.observatii && e.observatii.length ? `<ul class="small">${e.observatii.map((x) => `<li>${f(x)}</li>`).join('')}</ul>` : ''}`) : '';
+    return `
+      ${S.callout('info', `<p><strong>Eseul complet, pe cele trei repere</strong>, din materialele de la clasă. Are ${words} de cuvinte, adică mai mult decât îți trebuie: la examen, 500–650 de cuvinte sunt suficiente. Folosește-l ca rezervor: alegi două trăsături, două imagini și două elemente și le scrii cu cuvintele tale.</p>`)}
+      ${corr}
+      ${e.repere.map((r) => `<div class="reper-h"><h3>${RLBL[r.r] || r.r}</h3><span class="hand">6 p</span></div>
+        <p class="small muted" style="margin-top:-4px">${S.esc(r.cerinta)}</p>
+        <div class="essay">${r.p.map((x) => `<p>${mark(x)}</p>`).join('')}</div>`).join('')}`;
+  }
+
   function quotesTab(o) {
     return `<ul class="quote-list">${(o.citate || []).map((c) => `<li><span class="qt">${f(c.text || c)}</span>${c.context ? `<span class="cx">${f(c.context)}</span>` : ''}</li>`).join('')}</ul>`;
   }
@@ -128,6 +144,8 @@
     const known = S.known();
     const recall = S.store.get('recall', false);
     const tabs = [{ label: 'Particularități', html: partTab(o) }];
+    const es = window.ESEURI && window.ESEURI[o.id];
+    if (es) tabs.push({ label: 'Eseul complet', html: eseuTab(es) });
     if (o.personaje && o.personaje.length) tabs.push({ label: 'Personaje', html: persTab(o) });
     if (o.relatii && o.relatii.length) tabs.push({ label: 'Relații', html: relTab(o) });
     if (o.citate && o.citate.length) tabs.push({ label: 'Citate', html: quotesTab(o) });

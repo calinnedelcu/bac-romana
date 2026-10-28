@@ -172,6 +172,7 @@
       ${T.note ? S.callout('info', `<p>${S.esc(T.note)}</p>`) : ''}
 
       <h2 id="eseul">3. Eseul, pe repere</h2>
+      ${o && window.ESEURI && window.ESEURI[o.id] ? S.callout('tip', `<p>Pentru „${S.esc(o.titlu)}” ai și un eseu complet, scris pe repere, din materialele de la clasă: <a href="#/opera/${o.id}">fișa operei</a>, tabul „Eseul complet”.</p>`) : ''}
       ${o ? `<div id="plan">${plan}</div>
       <div class="card tight">
         <div class="wc"><span><b id="c-wc">0</b> cuvinte în plan</span><span id="c-wc-msg"></span><button class="btn sm" data-copy="plan-text">Copiază textul</button></div>

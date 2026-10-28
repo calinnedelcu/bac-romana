@@ -512,6 +512,11 @@ input[type="range"] { width: 100%; accent-color: var(--accent); }
 .reper-h { display: flex; align-items: center; gap: 10px; margin: 34px 0 10px; }
 .reper-h h3 { margin: 0; }
 .reper-h .hand { color: var(--red); font-size: 1.35rem; transform: rotate(-5deg); }
+.essay { background: var(--sheet); border: 1px solid var(--rule); border-radius: 14px; padding: 18px 22px 18px 34px; font-family: var(--f-text); font-size: 1.02rem; line-height: 1.85; color: var(--ink);
+  background-image: linear-gradient(90deg, transparent 21px, color-mix(in srgb, var(--red) 40%, transparent) 21px 22.5px, transparent 22.5px); }
+.essay p { text-indent: 1.4em; margin: 0 0 .7rem; }
+.essay p:last-child { margin-bottom: 0; }
+mark.corr { background: color-mix(in srgb, var(--red) 13%, transparent); color: inherit; border-bottom: 2px solid var(--red); border-radius: 3px 3px 0 0; padding: 0 2px; -webkit-box-decoration-break: clone; box-decoration-break: clone; }
 .recall .rv { filter: blur(6px); cursor: pointer; user-select: none; transition: filter .25s; }
 .recall .rv.shown { filter: none; cursor: auto; user-select: text; }
 .quote-list { list-style: none; padding: 0; margin: 10px 0; display: grid; gap: 10px; }
