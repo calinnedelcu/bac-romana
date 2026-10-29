@@ -519,6 +519,22 @@ input[type="range"] { width: 100%; accent-color: var(--accent); }
   background-image: linear-gradient(90deg, transparent 21px, color-mix(in srgb, var(--red) 40%, transparent) 21px 22.5px, transparent 22.5px); }
 .essay p { text-indent: 1.4em; margin: 0 0 .7rem; }
 .essay p:last-child { margin-bottom: 0; }
+.essay.annot { padding-right: 18px; }
+.ap { display: grid; grid-template-columns: minmax(0, 1fr) 176px; gap: 18px; align-items: start; }
+.ap + .ap, .ap + .ap-skip, .ap-skip + .ap, .ap-skip + .ap-skip { margin-top: .7rem; }
+.ap-t p { margin: 0; }
+.ap-n { font: 600 1.22rem/1.15 var(--f-hand); color: var(--red); padding: 4px 0 0 12px; border-left: 1px dashed color-mix(in srgb, var(--red) 35%, transparent); }
+.ap-n.free { color: var(--muted); border-left-color: var(--rule-2); }
+.ap-pt { display: block; font-size: 1.55rem; line-height: 1; transform: rotate(-6deg); transform-origin: left center; margin-bottom: 3px; }
+.ap-skip { border: 1px dashed var(--rule-2); border-radius: 10px; padding: 6px 12px; color: var(--muted); }
+.ap-skip summary { cursor: pointer; display: flex; justify-content: space-between; align-items: center; gap: 10px; font: 500 .9rem/1.4 var(--f-body); }
+.ap-skip summary > span:first-child { text-decoration: line-through; text-decoration-color: var(--red); }
+.ap-skip p { color: var(--muted); font-size: .97rem; margin: .5rem 0 0; }
+@media (max-width: 640px) {
+  .ap { grid-template-columns: minmax(0, 1fr); gap: 2px; }
+  .ap-n { order: -1; border-left: 0; padding: 0; display: flex; align-items: baseline; gap: 8px; }
+  .ap-pt { display: inline-block; font-size: 1.3rem; margin: 0; }
+}
 mark.corr { background: color-mix(in srgb, var(--red) 13%, transparent); color: inherit; border-bottom: 2px solid var(--red); border-radius: 3px 3px 0 0; padding: 0 2px; -webkit-box-decoration-break: clone; box-decoration-break: clone; }
 .recall .rv { filter: blur(6px); cursor: pointer; user-select: none; transition: filter .25s; }
 .recall .rv.shown { filter: none; cursor: auto; user-select: text; }

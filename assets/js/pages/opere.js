@@ -126,12 +126,35 @@
       `<p class="small muted">Locurile corectate sunt marcate în text. Restul e textul de pe foaie, cu câteva retușuri de punctuație și de tipar.</p>
       <div class="tbl-wrap"><table><tr><th>Pe foaie</th><th>Corect</th><th>De ce</th></tr>${e.corecturi.map(([a, b, c]) => `<tr><td class="serif">${f(a)}</td><td class="serif"><mark class="corr">${f(b)}</mark></td><td class="small">${f(c)}</td></tr>`).join('')}</table></div>
       ${e.observatii && e.observatii.length ? `<ul class="small">${e.observatii.map((x) => `<li>${f(x)}</li>`).join('')}</ul>` : ''}`) : '';
-    return `
-      ${S.callout('info', `<p><strong>Eseul complet, pe cele trei repere</strong>, din materialele de la clasă. Are ${words} de cuvinte, adică mai mult decât îți trebuie: la examen, 500–650 de cuvinte sunt suficiente. Folosește-l ca rezervor: alegi două trăsături, două imagini și două elemente și le scrii cu cuvintele tale.</p>`)}
-      ${corr}
-      ${e.repere.map((r) => `<div class="reper-h"><h3>${RLBL[r.r] || r.r}</h3><span class="hand">6 p</span></div>
-        <p class="small muted" style="margin-top:-4px">${S.esc(r.cerinta)}</p>
-        <div class="essay">${r.p.map((x) => `<p>${mark(x)}</p>`).join('')}</div>`).join('')}`;
+    const head = (r) => `<div class="reper-h"><h3>${RLBL[r.r] || r.r}</h3><span class="hand">6 p</span></div>
+        <p class="small muted" style="margin-top:-4px">${S.esc(r.cerinta)}</p>`;
+    const full = e.repere.map((r) => `${head(r)}<div class="essay">${r.p.map((x) => `<p>${mark(x)}</p>`).join('')}</div>`).join('');
+    const intro = `<p><strong>Eseul complet, pe cele trei repere</strong>, din materialele de la clasă. Are ${words} de cuvinte. Baremul punctează câte două lucruri pe fiecare reper: două trăsături, două imagini, două elemente de compoziție sau de limbaj.</p>`;
+    if (!e.examen) return `${S.callout('info', intro)}${corr}${full}`;
+
+    // Varianta de examen: paragrafele de scris, cu rândul din barem pe margine; cele sărite, grupate și tăiate.
+    const ex = e.examen;
+    const kept = e.repere.flatMap((r) => r.p.filter((_, i) => !ex.skip[`${r.r}.${i + 1}`]));
+    const kw = S.words(kept.join(' ').replace(/[{}*]/g, ''));
+    const examHtml = `
+      ${S.callout('tip', `<p>${f(ex.plan)}</p><ul class="small">${ex.deCe.map((x) => `<li>${f(x)}</li>`).join('')}</ul>
+        <p class="small">Varianta de examen are ${kw} de cuvinte (eseul complet: ${words}). Pe margine, cu roșu, e rândul din barem pe care îl bifează fiecare paragraf; cu gri, paragrafele care leagă textul, fără puncte separate.</p>`, 'Cum îl scrii la examen')}
+      ${e.repere.map((r) => {
+        const groups = [];
+        r.p.forEach((x, i) => {
+          const k = `${r.r}.${i + 1}`, s = ex.skip[k], g = groups[groups.length - 1];
+          if (s && g && g.skip === s) g.ps.push(x); else groups.push({ k, skip: s, ps: [x] });
+        });
+        return `${head(r)}<div class="essay annot">${groups.map((g) => {
+          if (g.skip) return `<details class="ap-skip"><summary><span>${S.esc(g.skip)}</span><span class="chip">nu îl scrii</span></summary>${g.ps.map((x) => `<p>${mark(x)}</p>`).join('')}</details>`;
+          const [lbl, pt] = ex.par[g.k] || ['', ''];
+          return `<div class="ap"><div class="ap-t"><p>${mark(g.ps[0])}</p></div><div class="ap-n${pt ? '' : ' free'}">${pt ? `<span class="ap-pt">${pt}</span>` : ''}${S.esc(lbl)}</div></div>`;
+        }).join('')}</div>`;
+      }).join('')}`;
+    return `${corr}${S.tabs([
+      { label: 'Varianta de examen', html: examHtml },
+      { label: 'Eseul complet', html: S.callout('info', intro) + full }
+    ])}`;
   }
 
   function quotesTab(o) {

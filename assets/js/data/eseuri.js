@@ -89,5 +89,32 @@ ESEURI['luceafarul'] = {
   ],
   observatii: [
     'Pe foaie, „schopenhaueriană” era corectat de mână; aici e scris corect din start.'
-  ]
+  ],
+  // Varianta de examen: ce bifează fiecare paragraf în barem (`par`, după reper și poziție) și ce nu se scrie (`skip`).
+  examen: {
+    plan: 'Scrii tot eseul de pe foaie, în ordine. Singura alegere e la Reperul 2: din cele patru tablouri comentezi două, *I și IV*.',
+    deCe: [
+      '*Tabloul I* e portretul geniului, cu cele două întrupări: cea mai clară legătură cu tema.',
+      '*Tabloul IV* e construit simetric cu primul, cum anunță paragraful despre compoziție, și se încheie cu „Nemuritor și rece”.',
+      'Tabloul II e despre omul comun (Luceafărul nu apare), iar tabloul III e cel mai lung.'
+    ],
+    par: {
+      'R1.1': ['perioada și curentul', '+2'],
+      'R1.2': ['numește poemul: trecerea spre trăsături', ''],
+      'R1.3': ['trăsătura 1: folclorul și miturile, dovedite în text', '+2'],
+      'R1.4': ['trăsătura 2: geniul opus omului comun, dovedit în text', '+2'],
+      'R2.1': ['tema', '+2'],
+      'R2.2': ['compoziția: anunță toate tablourile, ca să comentezi doar două', ''],
+      'R2.3': ['imaginea 1 · tabloul I', '+2'],
+      'R2.7': ['imaginea 2 · tabloul IV', '+2'],
+      'R3.1': ['elementul 1: titlul, cu relevanța lui', '+3'],
+      'R3.2': ['elementul 2: incipitul, cu relevanța lui', '+3'],
+      'R3.3': ['încheierea (redactare)', '+1']
+    },
+    skip: {
+      'R2.4': 'Tabloul II · Cătălin și Cătălina',
+      'R2.5': 'Tabloul III · zborul și dialogul cu Demiurgul',
+      'R2.6': 'Tabloul III · zborul și dialogul cu Demiurgul'
+    }
+  }
 };
