@@ -461,6 +461,9 @@ input[type="range"] { width: 100%; accent-color: var(--accent); }
 .plan-par-b p:last-child { margin-bottom: 0; }
 .plan-par-b .pt { display: inline-block; font: 700 1.15rem/1 var(--f-hand); color: var(--red); transform: rotate(-6deg); margin-left: 3px; white-space: nowrap; }
 .plan-par-b .small.muted { color: var(--muted); }
+.plan-par-b .grid.g2 { gap: 4px 22px; }
+.bld-sec h4 { margin: 0 0 8px; }
+#arg-builder > .bld-sec + .grid, #arg-builder > .grid + .bld-sec { margin-top: 16px; }
 .pick { display: flex; gap: 6px; flex-wrap: wrap; margin: 2px 0 10px; font-family: var(--f-body); }
 .pick button { border: 1px solid var(--rule-2); background: var(--sheet); border-radius: 99px; padding: 5px 12px; font-size: .8rem; cursor: pointer; color: var(--ink-2); font-weight: 600; }
 .pick button[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: #fff; }

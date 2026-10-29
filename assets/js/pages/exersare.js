@@ -17,7 +17,8 @@
   const rx = (s) => new RegExp(s, 'iu');
   const has = (t, list) => list.some((w) => rx('(^|[^\\p{L}])' + w + '($|[^\\p{L}])').test(t));
   const count = (t, list) => list.reduce((a, w) => a + ((t.match(new RegExp('(^|[^\\p{L}])' + w + '(?=$|[^\\p{L}])', 'giu')) || []).length), 0);
-  const CONN = ['în primul rând', 'în al doilea rând', 'în al treilea rând', 'de asemenea', 'pe de altă parte', 'pe de o parte', 'deoarece', 'întrucât', 'pentru că', 'fiindcă', 'de exemplu', 'spre exemplu', 'astfel', 'de aceea', 'prin urmare', 'așadar', 'în concluzie', 'în consecință', 'însă', 'totuși', 'cu toate acestea', 'mai mult', 'în plus', 'ceea ce arată', 'de fapt'];
+  const CAUZ = ['deoarece', 'pentru că', 'fiindcă', 'întrucât'];
+  const CONN = ['în primul rând', 'în al doilea rând', 'în al treilea rând', 'de asemenea', 'pe de altă parte', 'pe de o parte', 'deoarece', 'întrucât', 'pentru că', 'fiindcă', 'de exemplu', 'spre exemplu', 'astfel', 'de aceea', 'prin urmare', 'așadar', 'în concluzie', 'conchid că', 'în consecință', 'însă', 'totuși', 'cu toate acestea', 'mai mult', 'în plus', 'ceea ce arată', 'de fapt'];
 
   function checks(mode, t) {
     const n = S.words(t);
@@ -31,15 +32,17 @@
     const add = (ok, txt, p, sub) => out.push({ s: ok === true ? 'ok' : ok === 'mid' ? 'mid' : 'no', txt, p, sub });
     add(n >= M.min ? true : false, `Minimum ${M.min} de cuvinte`, mode === 'iii' ? 'condiție pt. 12 p' : mode === 'ii' ? 'condiție pt. 4 p' : '1 p', `${n} acum`);
     if (mode === 'ib') {
-      add(has(t, ['consider că', 'cred că', 'sunt de părere că', 'în opinia mea', 'părerea mea', 'consider', 'susțin că']) ? true : false, 'Opinia e formulată explicit', '1 p', '„Consider că…”, „Sunt de părere că…”');
+      add(has(t, ['consider că', 'cred că', 'sunt de părere că', 'în opinia mea', 'în viziunea mea', 'părerea mea', 'consider', 'susțin că']) ? true : false, 'Opinia e formulată explicit', '1 p', '„Consider că…”, „Sunt de părere că…”');
       const a = count(t, ['în primul rând', 'în al doilea rând', 'un prim argument', 'un alt argument', 'al doilea argument', 'pe de altă parte', 'de asemenea', 'mai întâi', 'apoi']);
       add(a >= 2 ? true : a === 1 ? 'mid' : false, 'Două argumente marcate', '2 × 4 p', `${a} mărci de argument găsite`);
       add(quotes >= 1 ? true : false, 'Citat din textul dat (la examen)', '3 p', 'un citat între ghilimele, apoi ce dovedește');
       add(has(t, ['de exemplu', 'spre exemplu', 'un exemplu', 'experiența mea', 'personal', 'am observat', 'romanul', 'filmul', 'cartea', 'opera', 'mi s-a întâmplat', 'în familia mea']) ? true : false, 'Exemplu personal sau cultural', '1 p');
-      add(/^(în concluzie|așadar|prin urmare|în consecință|în final)/i.test(last) || has(last, ['în concluzie', 'așadar', 'prin urmare']) ? true : false, 'Concluzie în ultimul paragraf', '1 p', '„În concluzie, …”');
+      add(/^(în concluzie|conchid|așadar|prin urmare|în consecință|în final)/i.test(last) || has(last, ['în concluzie', 'conchid că', 'așadar', 'prin urmare']) ? true : false, 'Concluzie în ultimul paragraf', '1 p', '„În concluzie, …”, „Conchid că …”');
+      const P = paras.length >= 3 ? paras : lines;
+      if (P.length >= 2) add(has(P[0], CAUZ) || has(P[P.length - 1], CAUZ) ? 'mid' : true, 'Ipoteza și concluzia fără „deoarece” / „pentru că”', '', 'regula de la clasă: conectorii de cauză stau în argumentare');
       const c = count(t, CONN);
       add(c >= 4 ? true : c >= 2 ? 'mid' : false, 'Conectori', '2 p', `${c} găsiți`);
-      add(np >= 4 ? true : np >= 3 ? 'mid' : false, 'Paragrafe (ideal 4)', '1 p', `${np} acum · lasă un rând liber între ele`);
+      add(np >= 3 ? true : np === 2 ? 'mid' : false, 'Paragrafe: ipoteză, argumentare, concluzie', '1 p', `${np} acum · lasă un rând liber între ele`);
     }
     if (mode === 'ii') {
       const d = has(t, ['directă', 'direct', 'directe']), ind = has(t, ['indirectă', 'indirect', 'indirecte']);

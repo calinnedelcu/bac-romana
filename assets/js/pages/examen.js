@@ -23,7 +23,7 @@
         <li><strong>Planul eseului pe ciornă (10 min).</strong> Doar cuvinte-cheie: curentul + două trăsături, tema + două secvențe, două elemente. Nu scrie eseul pe ciornă: nu ai timp să-l copiezi.</li>
         <li><strong>Eseul direct pe foaie (60–70 min).</strong> Ai planul, scrii fluent. Numeri rândurile la final.</li>
         <li><strong>Subiectul I.A (20–25 min).</strong> Enunțuri complete, formula de răspuns, citatele exacte.</li>
-        <li><strong>Subiectul I.B (25–30 min).</strong> Patru paragrafe, opinie din prima frază.</li>
+        <li><strong>Subiectul I.B (25–30 min).</strong> Ipoteză, argumentare (A1 cu textul dat, A2 cu exemplul tău), concluzie. „Deoarece” doar în argumentare.</li>
         <li><strong>Subiectul II (15–20 min).</strong> Fraza-teză, două citate comentate, frază de efect.</li>
         <li><strong>Recitire (15–20 min).</strong> Doar ortografie și punctuație, cu lista de pe pagina de redactare.</li>
       </ol>
