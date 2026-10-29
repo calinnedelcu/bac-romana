@@ -114,7 +114,7 @@
 
   // Card de cerință: { id, num, title, sub, formulari[], barem[], how[], formula, example, traps[], extra }
   S.req = function (r) {
-    const tabs = [];
+    const tabs = r.tabs ? r.tabs.slice() : [];
     if (r.how || r.formula) tabs.push({ label: 'Cum scrii', html: `${r.how ? `<ul>${r.how.map((h) => `<li>${S.fmt(h)}</li>`).join('')}</ul>` : ''}${r.formula ? `<div class="lbl-h" style="margin-top:14px">Formula de răspuns</div><div class="tpl">${r.formula.split('\n').map((l) => `<p>${S.tpl(l)}</p>`).join('')}</div>` : ''}` });
     if (r.example) tabs.push({ label: 'Răspuns de punctaj maxim', html: r.example });
     if (r.traps) tabs.push({ label: 'Unde se pierd puncte', html: `<div class="callout trap" style="margin-top:0"><span class="ci">${S.icon('alert')}</span><div><ul style="margin:0">${r.traps.map((t) => `<li>${S.fmt(t)}</li>`).join('')}</ul></div></div>` });

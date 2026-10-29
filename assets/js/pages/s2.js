@@ -57,7 +57,63 @@
     ]
   });
 
+  // Schema de la clasă pentru notațiile autorului, cu răspunsul ei pe „Daria” (Testul 3, Bac 2020, profil real).
+  const darAns = [
+    ['În fragmentul din „Daria”, de Lucian Blaga, didascaliile conțin informațiile dramaturgului cu privire la jocul scenic, lista de personaje, decorul și luminile.', 'ce conțin', C], ' ',
+    ['Textul dramatic este organizat în paratext și metatext.', 'paratext + metatext', C], ' ',
+    ['Astfel, elementele paratextuale se referă la cele trei personaje și informațiile specifice lor („prietena mică și foarte grasă”).', 'personajele + citat', C], ' ',
+    ['Metatextul prezintă jocul scenic al actorilor, evidențiat în discuția lui Grigore cu Daria despre doamna Procopiu („arată spre Prietena”).', 'jocul scenic + citat', C], ' ',
+    ['De asemenea, elementele spectacolului dramatic redau decorul camerei simple și aranjate („o masă de lucru”, „o măsuță cu scaune și canapea”) și luminile („lampa aprinsă”).', 'decor și lumini', C], ' ',
+    ['În același timp, elementele contextuale ale paratextului determină spațiul și timpul acțiunii („{{aceeași}} cameră”, „spre seară”).', 'spațiu și timp', C], ' ',
+    ['Nu în ultimul rând, notațiile autorului contribuie la definirea personajelor, evidențiind situația lor financiară modestă („tablouri făcute de-o mână de diletant”) {{și încadrându-le în tipologia omului simplu}}.', 'caracterizare', C], ' ',
+    ['În concluzie, fragmentul dat surprinde, prin intermediul didascaliilor, transformarea textului literar în spectacol.', 'rolul +2', C]
+  ];
+  const darWords = S.words(darAns.filter(Array.isArray).map((p) => p[0]).join(' ').replace(/[{}]/g, ''));
+  const clasa = `
+    <p style="margin-top:0">Din materialele de la clasă. Notițele au trei părți:</p>
+    <ol class="small">
+      <li><strong>Teoria:</strong> ce conțin didascaliile, împărțite în paratext și metatext. O înveți ca să știi ce cauți în fragment.</li>
+      <li><strong>Schema:</strong> frazele care rămân mereu la fel, cu spații de completat. Pe ea o scrii la examen.</li>
+      <li><strong>Răspunsul pe „Daria”:</strong> aceeași schemă, completată pe un fragment concret, ca să vezi cum arată gata scrisă.</li>
+    </ol>
+    <div class="grid g2">
+      <div class="card tight"><h4>Paratextul</h4><ul class="small" style="margin:0">
+        <li>lista de personaje, cu informații despre ele</li><li>unitățile compoziționale: act, scenă, tablou</li><li>spațiul și timpul</li></ul></div>
+      <div class="card tight"><h4>Metatextul</h4><ul class="small" style="margin:0">
+        <li>mișcarea scenică</li><li>jocul actorilor: mimică, gestică</li><li>decorul</li><li>luminile</li><li>sonorizarea</li></ul></div>
+    </div>
+    <div class="lbl-h" style="margin-top:14px">Schema de la clasă</div>
+    <div class="tpl">
+      <p>${S.tpl('În fragmentul din [„titlul”], de [autorul], didascaliile conțin informațiile dramaturgului cu privire la [jocul scenic, lista de personaje, decorul, luminile…].')}</p>
+      <p>${S.tpl('Textul dramatic este organizat în paratext și metatext. Astfel, elementele paratextuale se referă la [personaje și informațiile despre ele + citat]. Metatextul prezintă jocul scenic al actorilor [secvența + citat + comentariu]. De asemenea, elementele spectacolului dramatic redau decorul [citat + comentariu], ceea ce permite încadrarea personajelor într-o tipologie [burghezul, parvenitul etc.].')}</p>
+      <p>${S.tpl('De asemenea, notațiile autorului contribuie la caracterizarea directă / indirectă a personajului [numele], evidențiind [trăsătura + citat].')}</p>
+      <p>${S.tpl('În concluzie, fragmentul dat surprinde, prin intermediul didascaliilor, transformarea textului literar în spectacol.')}</p>
+    </div>
+    <div class="lbl-h" style="margin-top:18px">Răspunsul de la clasă, pe „Daria”</div>
+    <p class="small muted">Fragmentul e începutul actului al doilea: didascalia cu decorul camerei („Aceeași cameră, însă aranjată”, „Spre seară. Lampa aprinsă.”), apoi scena 1, cu Daria, Grigore și Prietena. E chiar subiectul al II-lea din Testul 3 de antrenament, Bac 2020, profil real; citatele de mai jos sunt verificate pe el.</p>
+    ${S.ans(['<p>', ...darAns, '</p>'], { verdict: `Are ${darWords} de cuvinte (minimum 50). Prezentarea raportată la fragment (4 p) vine din notațiile citate și comentate: personaje, joc scenic, decor, lumini, spațiu, timp, caracterizare. Rolul (2 p) e spus explicit în ultima frază.` }).replace(/\{\{([^}]+)\}\}/g, '<mark class="corr" title="Corectat față de caiet">$1</mark>')}
+    ${S.callout('info', '<p>Baremul acelui test cerea exact asta: „prezentare adecvată și nuanțată, prin evidențierea rolului notațiilor autorului (caracterizare a personajelor, precizarea unor detalii scenografice, precizări de coordonate temporale sau spațiale etc.)”. Răspunsul de la clasă le are pe toate trei.</p>')}
+    <div class="lbl-h" style="margin-top:18px">Schema, frază cu frază, pe „Daria”</div>
+    <div class="tbl-wrap"><table>
+      <tr><th>Fraza din schemă</th><th>Ce a pus la „Daria”</th></tr>
+      <tr><td class="serif">„didascaliile conțin informațiile dramaturgului cu privire la…”</td><td>jocul scenic, lista de personaje, decorul și luminile</td></tr>
+      <tr><td class="serif">„elementele paratextuale se referă la…”</td><td>cele trei personaje, cu „prietena mică și foarte grasă”</td></tr>
+      <tr><td class="serif">„Metatextul prezintă jocul scenic al actorilor…”</td><td>discuția despre doamna Procopiu, cu „arată spre Prietena”</td></tr>
+      <tr><td class="serif">„elementele spectacolului dramatic redau decorul…”</td><td>camera, masa de lucru, măsuța, plus „lampa aprinsă”</td></tr>
+      <tr><td class="serif">spațiul și timpul (din lista paratextului)</td><td>„aceeași cameră”, „spre seară”</td></tr>
+      <tr><td class="serif">„notațiile autorului contribuie la caracterizarea…”</td><td>situația modestă, tipologia omului simplu</td></tr>
+      <tr><td class="serif">„În concluzie, … transformarea textului literar în spectacol.”</td><td>aceeași frază, neschimbată</td></tr>
+    </table></div>
+    ${S.callout('tip', '<p>Cauți în fragment ce tipuri de notații apar și completezi doar rândurile din schemă pentru care ai citate. Dacă fragmentul n-are lumini sau sonorizare, nu le pomenești. Frazele fixe (prima, cea cu paratextul și metatextul, concluzia) le scrii de fiecare dată la fel.</p>', 'La examen')}
+    ${S.acc('Ce am corectat față de caiet <span class="chip">3</span>', `<div class="tbl-wrap"><table><tr><th>În caiet</th><th>Corect</th><th>De ce</th></tr>
+      <tr><td class="serif">„ceea ce permit încadrarea”</td><td class="serif"><mark class="corr">„ceea ce permite încadrarea”</mark></td><td class="small">după „ceea ce”, verbul stă la singular (în schemă)</td></tr>
+      <tr><td class="serif">„aceași cameră”</td><td class="serif"><mark class="corr">„aceeași cameră”</mark></td><td class="small">așa e în fragment; se scrie cu doi de „e”</td></tr>
+      <tr><td class="serif">rândul de pe margine, adăugat cu săgeată</td><td class="serif"><mark class="corr">„și încadrându-le în tipologia omului simplu”</mark></td><td class="small">pus la locul lui, după citat; pentru „personajele”, pronumele e „le”</td></tr>
+    </table></div>
+    <p class="small">„Textul dramatic este organizat în paratext și metatext”: textul dramatic are și replicile; în paratext și metatext se împart notațiile autorului. Dacă vrei formularea exactă, scrie „Notațiile autorului sunt organizate în paratext și metatext.”</p>`)}`;
+
   const notatii = S.req({
+    tabs: [{ label: 'Schema de la clasă', html: clasa }],
     id: 'notatii', num: 'B', title: 'Rolul notațiilor autorului', sub: 'fragment de teatru · „Prezintă, în minimum 50 de cuvinte, rolul notațiilor autorului în fragmentul de mai jos.”',
     barem: [
       { t: 'precizarea rolului notațiilor autorului', p: 2, c: C, d: 'în barem, de exemplu: facilitarea transpunerii scenice / indicarea detaliilor scenografice / caracterizarea personajului' },
