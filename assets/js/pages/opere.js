@@ -119,7 +119,7 @@
   }
 
   const RLBL = { R1: 'Reperul 1 · Încadrarea', R2: 'Reperul 2 · Tema și imaginile poetice', R3: 'Reperul 3 · Elemente de compoziție și limbaj' };
-  function eseuTab(e) {
+  function eseuTab(e, id) {
     const words = S.words(e.repere.flatMap((r) => r.p).join(' ').replace(/[{}*]/g, ''));
     const mark = (t) => f(t).replace(/\{\{([^}]+)\}\}/g, '<mark class="corr" title="Corectat față de foaie">$1</mark>');
     const corr = e.corecturi && e.corecturi.length ? S.acc(`Ce am corectat față de foaie <span class="chip">${e.corecturi.length}</span>`,
@@ -130,7 +130,8 @@
         <p class="small muted" style="margin-top:-4px">${S.esc(r.cerinta)}</p>`;
     const full = e.repere.map((r) => `${head(r)}<div class="essay">${r.p.map((x) => `<p>${mark(x)}</p>`).join('')}</div>`).join('');
     const intro = `<p><strong>Eseul complet, pe cele trei repere</strong>, din materialele de la clasă. Are ${words} de cuvinte. Baremul punctează câte două lucruri pe fiecare reper: două trăsături, două imagini, două elemente de compoziție sau de limbaj.</p>`;
-    if (!e.examen) return `${S.callout('info', intro)}${corr}${full}`;
+    const learn = { label: 'Învață textul', html: S.learn ? S.learn.html(id) : '' };
+    if (!e.examen) return `${corr}${S.tabs([{ label: 'Eseul complet', html: S.callout('info', intro) + full }, learn])}`;
 
     // Varianta de examen: paragrafele de scris, cu rândul din barem pe margine; cele sărite, grupate și tăiate.
     const ex = e.examen;
@@ -153,7 +154,8 @@
       }).join('')}`;
     return `${corr}${S.tabs([
       { label: 'Varianta de examen', html: examHtml },
-      { label: 'Eseul complet', html: S.callout('info', intro) + full }
+      { label: 'Eseul complet', html: S.callout('info', intro) + full },
+      learn
     ])}`;
   }
 
@@ -168,7 +170,7 @@
     const recall = S.store.get('recall', false);
     const tabs = [{ label: 'Particularități', html: partTab(o) }];
     const es = window.ESEURI && window.ESEURI[o.id];
-    if (es) tabs.push({ label: 'Eseul complet', html: eseuTab(es) });
+    if (es) tabs.push({ label: 'Eseul complet', html: eseuTab(es, o.id) });
     if (o.personaje && o.personaje.length) tabs.push({ label: 'Personaje', html: persTab(o) });
     if (o.relatii && o.relatii.length) tabs.push({ label: 'Relații', html: relTab(o) });
     if (o.citate && o.citate.length) tabs.push({ label: 'Citate', html: quotesTab(o) });
@@ -215,6 +217,8 @@
     docTitle: (id) => { const o = S.opera(id); return o ? o.titlu : 'Fișă'; },
     render: operaPage,
     mount(root, id) {
+      const lb = root.querySelector('[data-learn]');
+      if (lb && S.learn) S.learn.mount(lb, window.ESEURI[id]);
       const b1 = root.querySelector('#tg-recall'), b2 = root.querySelector('#tg-known');
       if (!b1) return;
       b1.addEventListener('click', () => {
