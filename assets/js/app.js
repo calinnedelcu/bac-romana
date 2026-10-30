@@ -198,7 +198,7 @@
     const main = MAIN.map(([id, l, ic]) => `<a class="${active === id ? 'active' : ''}" href="#/${id}">${S.icon(ic)}${l}</a>`).join('');
     const moreActive = MORE.some(([id]) => id === active && id !== 'acasa');
     return `${subj}<span class="sep"></span>${main}
-      <span class="more-wrap"><button class="more" data-more aria-expanded="false">${moreActive ? S.byId[active].nav.label : 'Mai mult'} ${S.icon('down')}</button>
+      <span class="more-wrap"><button class="more" data-more aria-expanded="false"><span class="more-l">${moreActive ? S.byId[active].nav.label : 'Mai mult'}</span> ${S.icon('down')}</button>
       <span class="more-menu" hidden>${MORE.map(([id, l, ic]) => `<a href="#/${id}">${S.icon(ic)}${l}</a>`).join('')}</span></span>`;
   }
 
@@ -244,8 +244,9 @@
     const navId = page.navAs || page.id;
     document.body.dataset.c = themeOf(S.byId[navId] || page);
     document.getElementById('mainnav').innerHTML = topnav(navId);
+    fitTop();
     document.getElementById('tabbar').innerHTML = tabbar(navId);
-    closeSheet();
+    closeSheet(); closePalette();
 
     const main = document.getElementById('page');
     const layout = document.getElementById('layout');
@@ -259,7 +260,8 @@
     if (changed && !force) { main.classList.remove('enter'); void main.offsetWidth; main.classList.add('enter'); }
     buildToc(page, main);
     if (!force) {
-      const anchor = page.anchor && page.anchor(arg);
+      // Și paginile fără `anchor` propriu primesc #/pagina/secțiune (vin din căutare), când argumentul e id-ul unei secțiuni.
+      const anchor = page.anchor ? page.anchor(arg) : (page.id !== 'opera' && /^[a-z0-9-]+$/.test(arg) ? arg : null);
       const el = anchor && document.getElementById(anchor);
       if (el) el.scrollIntoView(); else window.scrollTo(0, 0);
     }
@@ -268,11 +270,27 @@
   }
   S.rerender = () => render(true);
 
+  // Bara de sus: dacă meniul nu încape lângă unelte, o strângem treptat. Pragurile fixe nu mergeau:
+  // lățimea depinde de fonturi, de browser și de eticheta lui „Mai mult” de pe pagina curentă.
+  const FIT = ['fit1', 'fit2', 'fit3', 'fit4', 'fit5', 'fit6'];
+  function fitTop() {
+    const bar = document.querySelector('.topbar'), nav = document.getElementById('mainnav');
+    if (!bar || !nav) return;
+    bar.classList.remove(...FIT);
+    if (!nav.offsetParent) return; // sub 1080px meniul e ascuns și apar tab-urile de jos
+    const tools = bar.querySelector('.top-tools');
+    const over = () => nav.scrollWidth > nav.clientWidth + 1 || nav.getBoundingClientRect().right > tools.getBoundingClientRect().left - 6;
+    for (const c of FIT) { if (!over()) break; bar.classList.add(c); }
+  }
+  let fitRaf = 0;
+  window.addEventListener('resize', () => { cancelAnimationFrame(fitRaf); fitRaf = requestAnimationFrame(fitTop); });
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitTop);
+
   /* ---------- cuprinsul (dreapta pe ecrane mari, cipuri sus pe cele înguste) ---------- */
-  let spy = null;
+  let spyOff = null;
   function buildToc(page, main) {
     const rail = document.getElementById('rail');
-    if (spy) { spy.disconnect(); spy = null; }
+    if (spyOff) { spyOff(); spyOff = null; }
     rail.innerHTML = '';
     if (page.wide) return;
     const hs = Array.from(main.querySelectorAll('h2'));
@@ -287,14 +305,22 @@
     if (!page.anchor) { [rail, chips].forEach((box) => box.querySelectorAll('a').forEach((a) => { a.removeAttribute('href'); a.setAttribute('role', 'link'); a.tabIndex = 0; })); }
     const set = (id) => {
       document.querySelectorAll('.rail a, .chips-nav a').forEach((a) => a.classList.toggle('on', a.dataset.to === id));
+      // Fără „smooth” aici: în Chrome, o derulare lină a cipurilor o oprea pe cea a paginii.
       const c = chips.querySelector(`[data-to="${id}"]`);
-      if (c) chips.scrollTo({ left: c.offsetLeft - 16, behavior: 'smooth' });
+      if (c && chips.offsetParent && (c.offsetLeft < chips.scrollLeft || c.offsetLeft + c.offsetWidth > chips.scrollLeft + chips.clientWidth)) chips.scrollLeft = c.offsetLeft - 16;
     };
-    spy = new IntersectionObserver((ents) => {
-      const vis = ents.filter((e) => e.isIntersecting).sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
-      if (vis[0]) set(vis[0].target.id);
-    }, { rootMargin: '-120px 0px -62% 0px' });
-    hs.forEach((h) => spy.observe(h));
+    // Secțiunea curentă = ultimul titlu care a trecut de bara de sus (la final de pagină, ultimul titlu).
+    let last = null, raf = 0;
+    const pick = () => {
+      let curH = hs[0];
+      for (const h of hs) { if (h.getBoundingClientRect().top <= 170) curH = h; else break; }
+      if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 4) curH = hs[hs.length - 1];
+      if (curH.id !== last) { last = curH.id; set(curH.id); }
+    };
+    const onScroll = () => { cancelAnimationFrame(raf); raf = requestAnimationFrame(pick); };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    spyOff = () => { window.removeEventListener('scroll', onScroll); cancelAnimationFrame(raf); };
+    pick();
   }
 
   /* ---------- căutare (⌘K) ---------- */
@@ -471,7 +497,9 @@
   document.addEventListener('DOMContentLoaded', () => {
     applyTheme(S.store.get('theme', 'auto'));
     const d = S.daysTo(S.EXAM);
-    document.getElementById('days').innerHTML = `<b>${d}</b> zile până la proba scrisă`;
+    const days = document.getElementById('days');
+    days.innerHTML = `<b>${d}</b> zile<span class="d-long"> până la proba scrisă</span>`;
+    days.title = `${d} zile până la proba scrisă (14 iunie 2027)`;
     document.querySelector('.searchbtn').insertAdjacentHTML('afterbegin', S.icon('search'));
     render();
   });

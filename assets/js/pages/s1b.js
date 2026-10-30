@@ -198,7 +198,7 @@
       ${S.callout('trap', '<p>Pune virgulă după conectorii de la începutul frazei: <em>În primul rând,</em> <em>Astfel,</em> <em>De exemplu,</em> <em>În concluzie,</em>. Nu pune virgulă înainte de <em>că</em> în <em>Consider că…</em> / <em>Conchid că…</em>.</p>', 'Punctuația în jurul conectorilor')}
 
       <h2>Unde se pierd puncte</h2>
-      <div class="callout trap"><ul style="margin:0">
+      ${S.callout('trap', `<ul style="margin:0">
         <li><strong>Opinie ambiguă</strong> („Fotografiile pot avea și nu pot avea un rol…”): nu e o opinie formulată.</li>
         <li><strong>Argumente fără dezvoltare</strong>: o propoziție pentru fiecare, apoi concluzia. Iei 1 p în loc de 2 la fiecare dezvoltare.</li>
         <li><strong>Textul dat lipsește sau e doar citat</strong>: pierzi 2–3 puncte.</li>
@@ -206,7 +206,7 @@
         <li><strong>Al doilea argument contrazice ipoteza</strong> (la „pe de o parte, pe de altă parte”): nu mai e în acord cu opinia.</li>
         <li><strong>Un singur bloc de text</strong>, fără paragrafe: riști punctul pentru așezare în pagină și pe cel pentru conectori.</li>
         <li><strong>Sub 150 de cuvinte</strong>: pierzi punctul. Țintește 180–250.</li>
-      </ul></div>
+      </ul>`)}
 
       <h2 id="construieste">Construiește-ți textul</h2>
       <p>Completează câmpurile cu ideile tale pe o temă de exersare. Site-ul le așază pe structura de la clasă, numără cuvintele și verifică regulile conectorilor. Pentru verificare automată pe un text scris liber, folosește <a href="#/exersare">Exersează cu cronometru</a>.</p>

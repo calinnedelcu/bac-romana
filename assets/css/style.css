@@ -162,9 +162,17 @@ hr { border: 0; border-top: 1px dashed var(--rule-2); margin: 2rem 0; }
 .days { display: inline-flex; align-items: baseline; gap: 6px; padding: 0 4px; color: var(--muted); font-size: .8rem; white-space: nowrap; }
 .days b { font: 800 1.15rem/1 var(--f-display); color: var(--red); letter-spacing: -.02em; }
 
-@media (max-width: 1420px) { .days { display: none; } .searchbtn { min-width: 0; } .searchbtn span { display: none; } }
-@media (max-width: 1240px) { .mainnav a .ico { display: none; } .mainnav a, .mainnav button.more { padding: 0 10px; } }
-@media (max-width: 1080px) { .mainnav { display: none; } .searchbtn kbd { display: none; } }
+/* Bara se strânge treptat, din JS (fitTop), cât timp meniul nu încape: fit1 … fit6. */
+.topbar.fit1 .days .d-long { display: none; }
+.topbar.fit2 .searchbtn { min-width: 0; }
+.topbar.fit2 .searchbtn span { display: none; }
+.topbar.fit3 .mainnav a .ico { display: none; }
+.topbar.fit3 .mainnav a, .topbar.fit3 .mainnav button.more { padding: 0 9px; }
+.topbar.fit3 .mainnav button.more .more-l { max-width: 9em; overflow: hidden; text-overflow: ellipsis; }
+.topbar.fit4 .days { display: none; }
+.topbar.fit5 .mainnav a.navsubj .pt { display: none; }
+.topbar.fit6 .brand > span:last-child { display: none; }
+@media (max-width: 1080px) { .mainnav, .days { display: none; } .searchbtn { min-width: 0; } .searchbtn span, .searchbtn kbd { display: none; } }
 
 /* ================= Tab-uri pe telefon ================= */
 .tabbar { display: none; }
@@ -215,7 +223,7 @@ hr { border: 0; border-top: 1px dashed var(--rule-2); margin: 2rem 0; }
 .palette-foot { display: flex; gap: 14px; padding: 9px 16px; border-top: 1px solid var(--rule); font-size: .76rem; color: var(--muted); }
 
 /* ================= Pagina ================= */
-.shell { max-width: 1240px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.shell { overflow-x: clip; max-width: 1240px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
 .layout { display: grid; grid-template-columns: minmax(0, 1fr); gap: 48px; padding-block: 34px 110px; }
 .layout.has-rail { grid-template-columns: minmax(0, 760px) 220px; justify-content: center; }
 .layout.wide { padding-block: 26px 110px; }
@@ -608,7 +616,7 @@ mark.corr { background: color-mix(in srgb, var(--red) 13%, transparent); color: 
 /* foaia de examen din antet */
 .exam-sheet {
   position: relative; background: var(--sheet); border-radius: 6px; padding: 26px 26px 22px; box-shadow: var(--shadow-l);
-  border: 1px solid var(--rule); transform: rotate(1.2deg); font-family: var(--f-text);
+  border: 1px solid var(--rule); transform: rotate(1.2deg); font-family: var(--f-text); margin-right: 12px;
 }
 .exam-sheet::before { content: ""; position: absolute; inset: 8px -8px -8px 8px; z-index: -1; border-radius: 6px; background: var(--sheet-2); border: 1px solid var(--rule); transform: rotate(-2.4deg); }
 .exam-sheet .sh-head { text-align: center; font-size: .78rem; line-height: 1.45; color: var(--ink-2); padding-bottom: 12px; border-bottom: 1px solid var(--rule); }
