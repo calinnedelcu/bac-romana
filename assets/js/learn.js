@@ -136,7 +136,7 @@
 
       function card() {
         const p = P.find((x) => x.k === ui.k);
-        const head = `<div class="lhead"><b>${lbl(p)}</b>${p.note ? `<span class="lnote">${p.note[1] ? `<span class="pt">${p.note[1]}</span> ` : ''}${S.esc(p.note[0])}</span>` : ''}<span class="muted small">${words(p.txt).length} de cuvinte</span></div>`;
+        const head = `<div class="lhead">${S.audio ? S.audio.btn(id, p.k) : ''}<b>${lbl(p)}</b>${p.note ? `<span class="lnote">${p.note[1] ? `<span class="pt">${p.note[1]}</span> ` : ''}${S.esc(p.note[0])}</span>` : ''}<span class="muted small">${words(p.txt).length} de cuvinte</span></div>`;
         if (ui.mode === 'recall') {
           return `${head}<textarea class="paper-ta lta" id="l-ta" spellcheck="false" lang="ro" placeholder="Scrie paragraful din memorie. Sau spune-l cu voce tare și apasă „Am spus-o”."></textarea>
             <div class="lgrade"><button class="btn primary" data-check>Verifică ce am scris</button><button class="btn" data-said>Am spus-o cu voce tare</button></div>
@@ -147,7 +147,7 @@
           : ui.mode === 'first' ? 'Fiecare cuvânt a rămas doar cu prima literă. Spune paragraful întreg; apasă pe o literă dacă te blochezi.'
           : 'Spune paragraful cu voce tare, cu tot cu cuvintele ascunse. Apasă pe un spațiu gol doar dacă te blochezi.';
         return `${head}<p class="small muted" style="margin:0 0 8px">${tip}${ui.mode !== 'read' ? ` <span id="l-hints">${hints ? `Ai cerut ${hints} cuvinte.` : ''}</span>` : ''}</p>
-          <div class="essay lcard"><p>${body}</p></div>
+          <div class="essay lcard"><p data-ak="${id}|${p.k}">${body}</p></div>
           ${ui.mode !== 'read' ? `<div class="lgrade"><span class="small muted">Cum a mers?</span>${gradeBtns()}</div><div id="l-res"></div>` : ''}`;
       }
       const gradeBtns = () => `<button class="btn sm" data-g="nu">Nu încă</button><button class="btn sm" data-g="aproape">Aproape</button><button class="btn sm primary" data-g="stiu">Știu</button>`;
@@ -157,6 +157,7 @@
         box.innerHTML = `${top()}
           <div class="pick lmodes" role="group" aria-label="Treapta">${MODES.map(([m, l], i) => `<button data-mode="${m}" aria-pressed="${ui.mode === m}">${i ? i + '. ' : ''}${l}</button>`).join('')}</div>
           ${ui.mode === 'skel' ? skeleton() : picker() + card()}`;
+        if (S.audio) S.audio.sync();
       }
 
       function result(s, extra) {

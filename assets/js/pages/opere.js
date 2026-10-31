@@ -128,10 +128,15 @@
       ${e.observatii && e.observatii.length ? `<ul class="small">${e.observatii.map((x) => `<li>${f(x)}</li>`).join('')}</ul>` : ''}`) : '';
     const head = (r) => `<div class="reper-h"><h3>${RLBL[r.r] || r.r}</h3><span class="hand">6 p</span></div>
         <p class="small muted" style="margin-top:-4px">${S.esc(r.cerinta)}</p>`;
-    const full = e.repere.map((r) => `${head(r)}<div class="essay">${r.p.map((x) => `<p>${mark(x)}</p>`).join('')}</div>`).join('');
+    // fiecare paragraf are cheia lui (data-ak) și butonul de ascultat, dacă există audio
+    const play = (k) => (S.audio ? S.audio.btn(id, k) : '');
+    const para = (k, x) => `<p data-ak="${id}|${k}">${play(k)}${mark(x)}</p>`;
+    const bar = (keys, scope, t) => (S.audio ? S.audio.bar(id, keys, scope, t) : '');
+    const allKeys = e.repere.flatMap((r) => r.p.map((_, i) => `${r.r}.${i + 1}`));
+    const full = e.repere.map((r) => `${head(r)}<div class="essay">${r.p.map((x, i) => para(`${r.r}.${i + 1}`, x)).join('')}</div>`).join('');
     const intro = `<p><strong>Eseul complet, pe cele trei repere</strong>, din materialele de la clasă. Are ${words} de cuvinte. Baremul punctează câte două lucruri pe fiecare reper: două trăsături, două imagini, două elemente de compoziție sau de limbaj.</p>`;
     const learn = { label: 'Învață textul', html: S.learn ? S.learn.html(id) : '' };
-    if (!e.examen) return `${corr}${S.tabs([{ label: 'Eseul complet', html: S.callout('info', intro) + full }, learn])}`;
+    if (!e.examen) return `${corr}${S.tabs([{ label: 'Eseul complet', html: S.callout('info', intro) + bar(allKeys, 'complet', 'Ascultă tot eseul') + full }, learn])}`;
 
     // Varianta de examen: paragrafele de scris, cu rândul din barem pe margine; cele sărite, grupate și tăiate.
     const ex = e.examen;
@@ -140,21 +145,22 @@
     const examHtml = `
       ${S.callout('tip', `<p>${f(ex.plan)}</p><ul class="small">${ex.deCe.map((x) => `<li>${f(x)}</li>`).join('')}</ul>
         <p class="small">Varianta de examen are ${kw} de cuvinte (eseul complet: ${words}). Pe margine, cu roșu, e rândul din barem pe care îl bifează fiecare paragraf; cu gri, paragrafele care leagă textul, fără puncte separate.</p>`, 'Cum îl scrii la examen')}
+      ${bar(e.repere.flatMap((r) => r.p.map((_, i) => `${r.r}.${i + 1}`)).filter((k) => !ex.skip[k]), 'examen', 'Ascultă varianta de examen')}
       ${e.repere.map((r) => {
         const groups = [];
         r.p.forEach((x, i) => {
           const k = `${r.r}.${i + 1}`, s = ex.skip[k], g = groups[groups.length - 1];
-          if (s && g && g.skip === s) g.ps.push(x); else groups.push({ k, skip: s, ps: [x] });
+          if (s && g && g.skip === s) { g.ps.push(x); g.ks.push(k); } else groups.push({ k, skip: s, ps: [x], ks: [k] });
         });
         return `${head(r)}<div class="essay annot">${groups.map((g) => {
-          if (g.skip) return `<details class="ap-skip"><summary><span>${S.esc(g.skip)}</span><span class="chip">nu îl scrii</span></summary>${g.ps.map((x) => `<p>${mark(x)}</p>`).join('')}</details>`;
+          if (g.skip) return `<details class="ap-skip"><summary><span>${S.esc(g.skip)}</span><span class="chip">nu îl scrii</span></summary>${g.ps.map((x, j) => para(g.ks[j], x)).join('')}</details>`;
           const [lbl, pt] = ex.par[g.k] || ['', ''];
-          return `<div class="ap"><div class="ap-t"><p>${mark(g.ps[0])}</p></div><div class="ap-n${pt ? '' : ' free'}">${pt ? `<span class="ap-pt">${pt}</span>` : ''}${S.esc(lbl)}</div></div>`;
+          return `<div class="ap"><div class="ap-t">${para(g.k, g.ps[0])}</div><div class="ap-n${pt ? '' : ' free'}">${pt ? `<span class="ap-pt">${pt}</span>` : ''}${S.esc(lbl)}</div></div>`;
         }).join('')}</div>`;
       }).join('')}`;
     return `${corr}${S.tabs([
       { label: 'Varianta de examen', html: examHtml },
-      { label: 'Eseul complet', html: S.callout('info', intro) + full },
+      { label: 'Eseul complet', html: S.callout('info', intro) + bar(allKeys, 'complet', 'Ascultă tot eseul') + full },
       learn
     ])}`;
   }
@@ -219,6 +225,7 @@
     mount(root, id) {
       const lb = root.querySelector('[data-learn]');
       if (lb && S.learn) S.learn.mount(lb, window.ESEURI[id]);
+      if (S.audio) S.audio.sync();
       const b1 = root.querySelector('#tg-recall'), b2 = root.querySelector('#tg-known');
       if (!b1) return;
       b1.addEventListener('click', () => {
