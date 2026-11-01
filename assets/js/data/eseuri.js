@@ -45,21 +45,30 @@ ESEURI['plumb'] = {
     'Volumul „Plumb” a apărut în 1916, înainte de perioada interbelică (1918–1939). Programa îl studiază pe Bacovia alături de poeții interbelici, dar la încadrare ce se punctează e curentul: simbolismul.',
     'Pentru ritm, foaia spune „variabil”. Versurile pot fi citite iambic (dor-*meau* a-*dânc* si-*cri*-e-*le* de *plumb*), de aceea multe analize vorbesc de ritm iambic; fișa de pe site folosește această formulare.'
   ],
-  // Ce bifează fiecare paragraf în barem (folosit la „Învață textul”); eseul se scrie întreg.
-  note: {
-    'R1.1': ['curentul: simbolismul', '+2'],
-    'R1.2': ['universul lui Bacovia: face legătura', ''],
-    'R1.3': ['poezia, volumul și specia (elegia)', ''],
-    'R1.4': ['cele două trăsături, dovedite în text', '+4'],
-    'R2.1': ['tema: moartea', '+2'],
-    'R2.2': ['compoziția: două strofe, două planuri', ''],
-    'R2.3': ['imaginea 1 · strofa I, realitatea exterioară', '+2'],
-    'R2.4': ['imaginea 2 · strofa a II-a, realitatea interioară', '+2'],
-    'R2.5': ['strofa a II-a: solitudinea', ''],
-    'R2.6': ['strofa a II-a: strigătul fără ecou', ''],
-    'R3.1': ['elementul 1: titlul, cu relevanța lui', '+3'],
-    'R3.2': ['elementul 2: limbajul, cu relevanța lui', '+3'],
-    'R3.3': ['încheierea (redactare)', '+1']
+  // Varianta de examen: aici se scrie tot eseul (poezia are două strofe, deci două imagini, fără alegere).
+  examen: {
+    plan: 'Scrii tot eseul de pe foaie, în ordine. „Plumb” are doar două strofe, iar Reperul 2 cere exact două imagini, deci nu ai ce alege: *strofa I* e prima imagine, *strofa a II-a* e a doua.',
+    deCe: [
+      'A doua imagine, strofa a II-a, e comentată în trei paragrafe (R2 · 4, 5, 6). Cele 2 puncte se dau pe toată imaginea, deci scrie-le pe toate trei.',
+      'La încadrare se punctează curentul: *simbolismul*. Prima frază spune „perioadei interbelice”, dar volumul a apărut în 1916, înainte de 1918 (vezi „Ce am corectat față de foaie”).',
+      'Paragrafele cu gri pe margine nu primesc puncte separate, dar leagă textul: duc de la autor la poezie și anunță cele două strofe.'
+    ],
+    par: {
+      'R1.1': ['curentul: simbolismul', '+2'],
+      'R1.2': ['universul lui Bacovia: face legătura', ''],
+      'R1.3': ['poezia, volumul și specia (elegia)', ''],
+      'R1.4': ['cele două trăsături, numite și dovedite în text', '+4'],
+      'R2.1': ['tema: moartea', '+2'],
+      'R2.2': ['compoziția: două strofe, două planuri', ''],
+      'R2.3': ['imaginea 1 · strofa I, realitatea exterioară', '+2'],
+      'R2.4': ['imaginea 2 · strofa a II-a, realitatea interioară', '+2'],
+      'R2.5': ['imaginea 2, continuare: solitudinea', ''],
+      'R2.6': ['imaginea 2, continuare: strigătul fără ecou', ''],
+      'R3.1': ['elementul 1: titlul, cu relevanța lui', '+3'],
+      'R3.2': ['elementul 2: limbajul, cu relevanța lui', '+3'],
+      'R3.3': ['încheierea (redactare)', '+1']
+    },
+    skip: {}
   }
 };
 

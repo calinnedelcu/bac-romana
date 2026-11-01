@@ -144,7 +144,7 @@
     const kw = S.words(kept.join(' ').replace(/[{}*]/g, ''));
     const examHtml = `
       ${S.callout('tip', `<p>${f(ex.plan)}</p><ul class="small">${ex.deCe.map((x) => `<li>${f(x)}</li>`).join('')}</ul>
-        <p class="small">Varianta de examen are ${kw} de cuvinte (eseul complet: ${words}). Pe margine, cu roșu, e rândul din barem pe care îl bifează fiecare paragraf; cu gri, paragrafele care leagă textul, fără puncte separate.</p>`, 'Cum îl scrii la examen')}
+        <p class="small">${kw === words ? `Are ${words} de cuvinte: scrii tot.` : `Varianta de examen are ${kw} de cuvinte (eseul complet: ${words}).`} Pe margine, cu roșu, e rândul din barem pe care îl bifează fiecare paragraf; cu gri, paragrafele care leagă textul, fără puncte separate.</p>`, 'Cum îl scrii la examen')}
       ${bar(e.repere.flatMap((r) => r.p.map((_, i) => `${r.r}.${i + 1}`)).filter((k) => !ex.skip[k]), 'examen', 'Ascultă varianta de examen')}
       ${e.repere.map((r) => {
         const groups = [];
